@@ -10,22 +10,39 @@ def pixelValues(image):
 	return res
 
 def imageToAscii(image, chars):
+	if verbose:
+		print 'Trasforming pixels to ascii characters:'
 	res = ''
 	(width, height) = image.size
+	totalPixels = width * height
+	currentPixel = 0
 	for row in range(0,height):
 		for col in range(0,width):
+			currentPixel += 1
+			if verbose:
+				printPercentage(currentPixel, totalPixels, 5)
 			res = res + chars[image.getpixel((col,row))]
+	if verbose:
+		sys.stdout.write('\n')
 	return res
 
 def createAsciiImage(ascii,width,height):
+	if verbose:
+		print 'Trasforming ascii characters to image:'
 	font = ImageFont.load_default()
 	fw = 7
 	fh = 7
 	image = Image.new('L', (fw*width,fh*height), color=255)
 	draw = ImageDraw.Draw(image)
+	currentChar = 0
 	for row in range (0,height):
 		for col in range (0,width):
+			currentChar += 1
+			if verbose:
+				printPercentage(currentChar, len(ascii), 5)
 			draw.text((col*fw, row*fh), ascii[row*width+col], font=font)
+	if verbose:
+		sys.stdout.write('\n')
 	return image
 
 def limitToLevels(image, levels):
@@ -38,6 +55,13 @@ def reverseColor(image):
 def adjustBrightness(image, brightness):
 	return img.point(lambda x: brightness*x)
 
+def printPercentage(current, total, step):
+	perc = int(100.0*current/total)
+	if perc%step is 0:
+		sys.stdout.write('\r[%-20s] %3d%%' % ('='*(perc/5), perc))
+
+
+verbose = True
 inputFile = ''
 width = 0
 height = 0
@@ -73,4 +97,8 @@ img = reverseColor(img)
 img = limitToLevels(img, len(chars))
 ascii = imageToAscii(img, chars)
 asciiImage = createAsciiImage(ascii,width,height)
+if verbose:
+	print 'Saving image...'
 asciiImage.save(output)
+if verbose:
+	print 'Finished'
