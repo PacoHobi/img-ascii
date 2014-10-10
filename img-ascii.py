@@ -85,7 +85,7 @@ while i<len(sys.argv):
 		inputFile = sys.argv[i]
 	i += 1
 
-chars = ' .,:;ira2G9A#'
+chars = ' .,\'-"|/*!(vIJF7&%#A58$H'
 img = Image.open(inputFile)
 if width is 0 or height is 0:
 	(width, height) = img.size

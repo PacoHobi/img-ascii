@@ -5,3 +5,7 @@
 *.gif
 *.png
 *.bmp
+
+# Mac stuff #
+#############
+.DS_STORE
