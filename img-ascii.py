@@ -1,5 +1,5 @@
 import sys
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageEnhance, ImageFont, ImageDraw
 
 def pixelValues(image):
 	res = []
@@ -49,7 +49,7 @@ def limitToLevels(image, levels):
 	p = 255/(levels-1)
 	return img.point(lambda x: x/p, '1')	
 
-def reverseColor(image):
+def inverseColor(image):
 	return img.point(lambda x: 255-x)
 
 def adjustBrightness(image, brightness):
@@ -60,40 +60,76 @@ def printPercentage(current, total, step):
 	if perc%step is 0:
 		sys.stdout.write('\r[%-20s] %3d%%' % ('='*(perc/5), perc))
 
+def print_help():
+	print 'Default output image format is PNG, it is recommended using PNG due to file size.\n'
+	print 'usage: img-ascii.py input_file [options]'
+	print 'Options:'
+	print "-b float : brightness factor: 0.0 outputs solid black image, 1.0 outputs original brightness"
+	print "-c float : contrast factor: 0.0 outputs solid grey image, 1.0 outputs original contrast"
+	print "-i       : inverse black and white"
+	print "-h       : show this help text and exit"
+	print "-o file  : output file. Default: 'output.png'"
+	print "-s w h   : width and height of output in characters"
+
 
 verbose = True
 inputFile = ''
 width = 0
 height = 0
 brightness = -1
+contrast = -1
+inverse = False
 output = 'output.png'
 i = 1
-while i<len(sys.argv):
-	arg = sys.argv[i]
-	if arg == '-o':
+if '-h' in sys.argv:
+	print_help()
+	sys.exit(0)
+try:
+	while i<len(sys.argv):
+		arg = sys.argv[i]
+		if arg == '-o':
+			i += 1
+			output = sys.argv[i]
+		elif arg == '-b':
+			i += 1
+			brightness = float(sys.argv[i])
+		elif arg == '-c':
+			i += 1
+			contrast = float(sys.argv[i])
+		elif arg == '-i':
+			i += 1
+			inverse = True
+		elif arg == '-s':
+			i += 1
+			width = int(sys.argv[i])
+			i += 1
+			height = int(sys.argv[i])
+		elif arg[0] == '-':
+			raise Exception(arg)
+		elif inputFile == '':
+			inputFile = sys.argv[i]
+		else:
+			raise Exception(arg)
 		i += 1
-		output = sys.argv[i]
-	elif arg == '-b':
-		i += 1
-		brightness = float(sys.argv[i])
-	elif arg == '-s':
-		i += 1
-		width = int(sys.argv[i])
-		i += 1
-		height = int(sys.argv[i])
-	else:
-		inputFile = sys.argv[i]
-	i += 1
+except Exception as ex:
+	print 'Error in input: %s\nusage: img-ascii.py input_file [options]\nTry \'img-ascii.py -h\' for more information.' %(ex)
+	sys.exit(0)
 
 chars = ' .,\'-"|/*!(vIJF7&%#A58$H'
-img = Image.open(inputFile)
+try:
+	img = Image.open(inputFile)
+except:
+	print('No such file: \'%s\'' %(inputFile))
 if width is 0 or height is 0:
 	(width, height) = img.size
 img = img.convert(mode='L')
 img = img.resize((width,height))
 if brightness is not -1:
-	img = adjustBrightness(img, brightness)
-img = reverseColor(img)
+	img = ImageEnhance.Brightness(img).enhance(brightness)
+if contrast is not -1:
+	img = ImageEnhance.Contrast(img).enhance(contrast)
+if not inverse:
+	img = inverseColor(img)
 img = limitToLevels(img, len(chars))
 ascii = imageToAscii(img, chars)
 asciiImage = createAsciiImage(ascii,width,height)
