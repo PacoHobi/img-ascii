@@ -10,7 +10,7 @@ To run the img-ascii script you will need:
 + [Pillow](http://pillow.readthedocs.org/en/latest/installation.html)
 
 ##Usage
-`python irc-ascii.pi input_file [options]`
+`python irc-ascii.py input_file [options]`
 
 ###Options
 Option     | Description
