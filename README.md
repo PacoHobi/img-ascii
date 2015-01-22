@@ -19,5 +19,5 @@ Option     | Description
 `-o file`  | Output file. Default is `output.png`
 `-s w h`   | Width and height of output in characters
 `-b float` | Brightness factor: `0.0` outputs solid black image, `1.0` outputs original brightness
-`-c float` | Contrast factor: `0.0` outputs solid grey image, `1.0 outputs original contrast
+`-c float` | Contrast factor: `0.0` outputs solid grey image, `1.0` outputs original contrast
 `-i`       | Inverse black and white
