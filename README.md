@@ -1,21 +1,21 @@
 img-ascii
 =========
 
-##Overview
+## Overview
 img-ascii is a simple command-line utility that converts images to ASCII art images.
 
 ![](http://i.imgur.com/z8ACBXT.png)
 ![](http://i.imgur.com/JZFTflj.png)
 
-##Requirements
+## Requirements
 To run the img-ascii script you will need:
 + [Python 2.7](https://www.python.org/downloads/)
 + [Pillow](http://pillow.readthedocs.org/en/latest/installation.html)
 
-##Usage
+## Usage
 `python irc-ascii.py input_file [options]`
 
-###Options
+### Options
 Option     | Description
 ---------- | -----------
 `-h`       | Show help text and exit
